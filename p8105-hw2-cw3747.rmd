@@ -9,3 +9,32 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Problem 1.1
+```{r}
+library(tidyverse)
+pols = read_csv("./538_datasets/pols-month.csv")
+```
+
+```{r}
+pols = pols |>
+  separate(mon, c("year", "month", "day"), sep = "-") |>
+  mutate(month = month.abb[as.numeric(month)]) |>
+  mutate(president = case_when(
+    prez_dem == 1 ~ "dem",
+    prez_gop == 1 ~ "gop"
+  )) |>
+  select(-prez_gop, -prez_dem, -day)
+```
+
+## Problem 1.2
+```{r}
+snp = read_csv("./538_datasets/snp.csv") |>
+  separate(date, c("month", "date", "year"), sep = "/") |>
+  mutate(
+    month = month.abb[as.numeric(month)],
+    year = as.numeric(year) + 2000
+    ) |>
+  select(year, month, close) |>
+  arrange(year, month)
+```
+
