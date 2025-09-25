@@ -54,5 +54,27 @@ unemp = read_csv("./538_datasets/unemployment.csv") |>
   arrange(year, month)
 ```
 
+## Problem 1.4
+```{r}
+pols = pols |>
+  mutate(
+    year = as.integer(year),
+    month = as.character(month))
 
-  
+snp = snp |>
+  mutate(
+    year = as.integer(year),
+    month = as.character(month))
+
+unemp = unemp |>
+  mutate(
+    year = as.integer(year),
+    month = as.character(month))
+```
+
+```{r}
+pols_merged = pols |>
+  left_join(snp, by = c("year", "month")) |>
+  left_join(unemp, by = c("year", "month"))
+```
+
