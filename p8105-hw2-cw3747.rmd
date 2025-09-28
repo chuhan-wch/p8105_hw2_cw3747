@@ -194,5 +194,17 @@ ny_rent = zillow_data |>
   arrange(zip_code, date)
 ```
 
+### Problem 3.1
+```{r}
+ny_rent_unique <- ny_rent |>
+  distinct(zip_code, date, .keep_all = TRUE)
 
+zip_geo_unique <- ny_rent |>
+  distinct(zip_code, county, neighborhood)
+
+n_obs  <- nrow(ny_rent_unique)
+n_zip  <- dplyr::n_distinct(ny_rent_unique$zip_code)
+n_nbhd <- dplyr::n_distinct(zip_geo_unique$neighborhood, na.rm = TRUE)
+```
+When merging, some zipcodes appeared in multiple boroughs (e.g., 10463 in both Bronx and Manhattan). To avoid artificial inflation of the number of observations due to many-to-many matches, I retained one unique mapping per zipcode. This ensures each zipcode has a single geographic identifier while preserving the full rental time series from Zillow. The resulting tidy dataset contains **`r format(n_obs, big.mark = ",")`** observations across **`r n_zip`** unique zipcodes and **`r n_nbhd`** neighborhoods.
 
