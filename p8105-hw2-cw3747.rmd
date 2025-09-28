@@ -188,5 +188,11 @@ zillow_data = zillow_data |>
     .keep = "unused")
 ```
 
+```{r}
+ny_rent = zillow_data |>
+  left_join(zip_info, by = "zip_code") |>
+  arrange(zip_code, date)
+```
+
 
 
