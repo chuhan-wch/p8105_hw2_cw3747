@@ -216,4 +216,38 @@ missing_zips <- setdiff(zips_info, zips_zillow)
 ```
 There are **`r length(missing_zips)`** ZIP codes that appear in the ZIP code dataset but not in the Zillow rental dataset, e.g., **`r paste(head(missing_zips, 5), collapse = ", ")`**. This may occur for several reasons: A.During certain periods, there may have been no available rental units in those ZIP codes; B.Some ZIP codes correspond mainly to business or industrial districts, which are not typically included in Zillow’s rental database; C.Zillow may not have updated its coverage promptly for certain ZIP codes.  
 
+### Problem 3.3
+```{r}
+library(lubridate)
 
+jan2020 <- ny_rent_unique |>
+  filter(year(date) == 2020, month(date) == 1) |>
+  select(zip_code, price2020 = rent_price)
+
+jan2021 <- ny_rent_unique |>
+  filter(year(date) == 2021, month(date) == 1) |>
+  select(zip_code, price2021 = rent_price)
+
+covid_rent_change <- jan2020 |>
+  inner_join(jan2021, by = "zip_code") |>
+  left_join(zip_geo_unique, by = "zip_code") |>
+  mutate(drop = price2021 - price2020) |>
+  arrange(drop) |>
+  slice(1:10) 
+```
+
+```{r}
+top1_zip   <- covid_rent_change$zip_code[1]
+top1_boro  <- covid_rent_change$county[1]   
+top1_nbhd  <- covid_rent_change$neighborhood[1] 
+top1_drop  <- covid_rent_change$drop[1]
+
+covid_rent_change |>
+  select(zip_code, county, neighborhood, price2020, price2021, drop) |>
+  knitr::kable(
+    digits = 0,
+    col.names = c("ZIP", "Borough", "Neighborhood",
+                  "Price (Jan 2020)", "Price (Jan 2021)", "Change (2021–2020)")
+  )
+```
+Comparing January 2021 to January 2020, the largest drop was in ZIP **`r top1_zip`**, **`r top1_boro`**, **`r top1_nbhd`**, with a change of **`r round(top1_drop, 0)`**. Most of the largest declines cluster in dense, high-rent neighborhoods where demand fell during early pandemic waves (e.g., CBD/commuter-heavy areas). Outer-borough ZIPs with relatively lower baseline rents show smaller or mixed changes.
