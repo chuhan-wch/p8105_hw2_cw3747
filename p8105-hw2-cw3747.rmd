@@ -90,7 +90,7 @@ library(readxl)
 library(janitor)
 library(lubridate)
 
-Mr_data = read_excel("./202409 Trash Wheel Collection Data.xlsx", sheet = "Mr. Trash Wheel", skip = 1) |>
+Mr_data = read_excel("./202509 Trash Wheel Collection Data.xlsx", sheet = "Mr. Trash Wheel", skip = 1) |>
   janitor::clean_names() |>
   select(where(~ !all(is.na(.x)))) |>
   filter(!is.na(dumpster)) |>
@@ -100,13 +100,13 @@ Mr_data = read_excel("./202409 Trash Wheel Collection Data.xlsx", sheet = "Mr. T
 
 ### Combination
 ```{r}
-Pf_data = read_excel("./202409 Trash Wheel Collection Data.xlsx", sheet = "Professor Trash Wheel", skip = 1) |>
+Pf_data = read_excel("./202509 Trash Wheel Collection Data.xlsx", sheet = "Professor Trash Wheel", skip = 1) |>
   janitor::clean_names() |>
   select(where(~ !all(is.na(.x)))) |>
   filter(!is.na(dumpster)) |>
   filter(!is.na(date), !is.na(year), !is.na(month))
   
-Gwy_data = read_excel("./202409 Trash Wheel Collection Data.xlsx", sheet = "Gwynnda Trash Wheel", skip = 1) |>
+Gwy_data = read_excel("./202509 Trash Wheel Collection Data.xlsx", sheet = "Gwynns Falls Trash Wheel", skip = 1) |>
   janitor::clean_names() |>
   select(where(~ !all(is.na(.x)))) |>
   filter(!is.na(dumpster)) |>
